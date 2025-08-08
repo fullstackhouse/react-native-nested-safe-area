@@ -1,5 +1,5 @@
 {
-  "name": "react-native-nested-safe-area",
+  "name": "@fullstackhouse/react-native-nested-safe-area",
   "version": "0.1.0",
   "description": "A wrapper on top of react-native-safe-area-context that allows nested safe area contexts",
   "main": "./lib/module/index.js",
@@ -34,6 +34,7 @@
   "scripts": {
     "example": "yarn workspace react-native-nested-safe-area-example",
     "test": "jest",
+    "test:e2e": "playwright test",
     "typecheck": "tsc",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
     "clean": "del-cli lib",
@@ -42,6 +43,9 @@
   },
   "keywords": [
     "react-native",
+    "safe-area",
+    "nested",
+    "context",
     "ios",
     "android"
   ],
@@ -64,9 +68,12 @@
     "@eslint/eslintrc": "^3.3.0",
     "@eslint/js": "^9.22.0",
     "@evilmartians/lefthook": "^1.5.0",
+    "@playwright/test": "^1.54.2",
     "@react-native/babel-preset": "0.78.2",
     "@react-native/eslint-config": "^0.78.0",
     "@release-it/conventional-changelog": "^9.0.2",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/react-native": "^13.2.2",
     "@types/jest": "^29.5.5",
     "@types/react": "^19.0.12",
     "commitlint": "^19.6.1",
@@ -79,12 +86,15 @@
     "react": "19.0.0",
     "react-native": "0.79.5",
     "react-native-builder-bob": "^0.40.13",
+    "react-native-safe-area-context": "4.6.3",
+    "react-test-renderer": "19.0.0",
     "release-it": "^17.10.0",
     "typescript": "^5.8.3"
   },
   "peerDependencies": {
     "react": "*",
-    "react-native": "*"
+    "react-native": "*",
+    "react-native-safe-area-context": ">=3.0.0"
   },
   "workspaces": [
     "example"
@@ -95,6 +105,12 @@
     "modulePathIgnorePatterns": [
       "<rootDir>/example/node_modules",
       "<rootDir>/lib/"
+    ],
+    "testPathIgnorePatterns": [
+      "<rootDir>/tests/"
+    ],
+    "setupFiles": [
+      "<rootDir>/jest.setup.js"
     ]
   },
   "commitlint": {
