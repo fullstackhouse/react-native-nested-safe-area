@@ -5,18 +5,27 @@ test('nested safe area example works on web', async ({ page }) => {
   await page.goto('/');
 
   // Wait for the app to load
-  await page.waitForTimeout(2000);
+  await page.waitForTimeout(3000);
 
-  // Check that the outer safe area text is visible
-  await expect(page.locator('text=Outer Safe Area')).toBeVisible();
+  // Check that the section titles are visible
+  await expect(page.locator('text=Header Section')).toBeVisible();
+  await expect(page.locator('text=Footer Section')).toBeVisible();
 
-  // Check that the inner safe area text is visible
-  await expect(page.locator('text=Inner Safe Area (top only)')).toBeVisible();
+  // Check that nested sections are visible
+  await expect(page.locator('text=Nested Section')).toBeVisible();
+  await expect(page.locator('text=Triple Nested').first()).toBeVisible();
 
-  // Check that the innermost safe area text is visible
-  await expect(
-    page.locator('text=Innermost Safe Area (bottom only)')
-  ).toBeVisible();
+  // Check that inset displays are working
+  await expect(page.locator('text=Root Level')).toBeVisible();
+  await expect(page.locator('text=Inside Header')).toBeVisible();
+  await expect(page.locator('text=Deeply Nested')).toBeVisible();
+  await expect(page.locator('text=Inside Footer')).toBeVisible();
+
+  // Verify that inset values are being displayed (they contain numbers)
+  const insetTexts = page.locator(
+    'text=/Top: \\d+, Right: \\d+, Bottom: \\d+, Left: \\d+/'
+  );
+  await expect(insetTexts.first()).toBeVisible();
 
   // Take a screenshot to verify the layout
   await page.screenshot({

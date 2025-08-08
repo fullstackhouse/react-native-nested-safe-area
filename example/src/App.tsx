@@ -1,7 +1,10 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import {
+  SafeAreaProvider,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context';
 import {
   NestedSafeAreaProvider,
   NestedSafeAreaView,
@@ -22,12 +25,27 @@ const InsetDisplay: React.FC<{ label: string }> = ({ label }) => {
   );
 };
 
+const RootInsetDisplay: React.FC = () => {
+  const safeAreaInsets = useSafeAreaInsets();
+
+  return (
+    <View style={styles.insetDisplay}>
+      <Text style={styles.insetLabel}>Device Safe Area</Text>
+      <Text style={styles.insetText}>
+        Top: {safeAreaInsets.top}, Right: {safeAreaInsets.right}, Bottom:{' '}
+        {safeAreaInsets.bottom}, Left: {safeAreaInsets.left}
+      </Text>
+    </View>
+  );
+};
+
 const App: React.FC = () => {
   return (
     <SafeAreaProvider>
       <StatusBar style="auto" />
       <NestedSafeAreaProvider>
         <View style={styles.container}>
+          <RootInsetDisplay />
           <InsetDisplay label="Root Level" />
 
           <NestedSafeAreaView
