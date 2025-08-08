@@ -2283,7 +2283,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fullstackhouse/react-native-nested-safe-area@workspace:*, @fullstackhouse/react-native-nested-safe-area@workspace:.":
+"@fullstackhouse/react-native-nested-safe-area@*, @fullstackhouse/react-native-nested-safe-area@workspace:.":
   version: 0.0.0-use.local
   resolution: "@fullstackhouse/react-native-nested-safe-area@workspace:."
   dependencies:
@@ -11282,7 +11282,7 @@ __metadata:
   dependencies:
     "@babel/core": ^7.20.0
     "@expo/metro-runtime": ~5.0.4
-    "@fullstackhouse/react-native-nested-safe-area": "workspace:*"
+    "@fullstackhouse/react-native-nested-safe-area": "*"
     expo: ~53.0.20
     expo-status-bar: ~2.2.3
     react: 19.0.0
