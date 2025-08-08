@@ -1,15 +1,12 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { StatusBar } from 'expo-status-bar';
-import {
-  SafeAreaProvider,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
 import {
   NestedSafeAreaProvider,
   NestedSafeAreaView,
   useNestedSafeAreaInsets,
 } from '@fullstackhouse/react-native-nested-safe-area';
+import { StatusBar } from 'expo-status-bar';
+import React from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 const InsetDisplay: React.FC<{ label: string }> = ({ label }) => {
   const insets = useNestedSafeAreaInsets();
@@ -25,29 +22,12 @@ const InsetDisplay: React.FC<{ label: string }> = ({ label }) => {
   );
 };
 
-const RootInsetDisplay: React.FC = () => {
-  const safeAreaInsets = useSafeAreaInsets();
-
-  return (
-    <View style={styles.insetDisplay}>
-      <Text style={styles.insetLabel}>Device Safe Area</Text>
-      <Text style={styles.insetText}>
-        Top: {safeAreaInsets.top}, Right: {safeAreaInsets.right}, Bottom:{' '}
-        {safeAreaInsets.bottom}, Left: {safeAreaInsets.left}
-      </Text>
-    </View>
-  );
-};
-
 const App: React.FC = () => {
   return (
     <SafeAreaProvider>
       <StatusBar style="auto" />
       <NestedSafeAreaProvider>
         <View style={styles.container}>
-          <RootInsetDisplay />
-          <InsetDisplay label="Root Level" />
-
           <NestedSafeAreaView
             style={styles.section}
             edges={['top', 'left', 'right']}
@@ -95,8 +75,6 @@ const styles = StyleSheet.create({
   },
   section: {
     backgroundColor: '#e0e0e0',
-    margin: 10,
-    borderRadius: 8,
   },
   sectionContent: {
     padding: 16,

@@ -24,22 +24,20 @@ test('nested safe area example loads and displays correctly', async ({
 test('inset displays show correct structure', async ({ page }) => {
   await page.goto('/');
   await page.waitForLoadState('networkidle');
-  await page.waitForSelector('text=Device Safe Area', { timeout: 10000 });
+  await page.waitForSelector('text=Inside Header', { timeout: 10000 });
 
   // Check that all inset display labels are visible
-  await expect(page.locator('text=Device Safe Area')).toBeVisible();
-  await expect(page.locator('text=Root Level')).toBeVisible();
   await expect(page.locator('text=Inside Header')).toBeVisible();
   await expect(page.locator('text=Deeply Nested')).toBeVisible();
-  await expect(page.locator('text=Triple Nested').first()).toBeVisible();
+  await expect(page.locator('text=Triple Nested')).toBeVisible();
   await expect(page.locator('text=Inside Footer')).toBeVisible();
 
   // Verify that inset values are being displayed with numeric format
   const insetPattern = /Top: \d+, Right: \d+, Bottom: \d+, Left: \d+/;
   const insetTexts = page.locator(`text=${insetPattern}`);
 
-  // Should have at least 6 inset displays (Device Safe Area + 5 nested levels)
-  await expect(insetTexts).toHaveCount(6);
+  // Should have 4 inset displays (Inside Header, Deeply Nested, Triple Nested, Inside Footer)
+  await expect(insetTexts).toHaveCount(4);
 
   // Verify first inset display is visible
   await expect(insetTexts.first()).toBeVisible();
