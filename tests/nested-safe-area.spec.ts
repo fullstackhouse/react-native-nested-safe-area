@@ -29,7 +29,7 @@ test('inset displays show correct structure', async ({ page }) => {
   // Check that all inset display labels are visible
   await expect(page.locator('text=Inside Header')).toBeVisible();
   await expect(page.locator('text=Deeply Nested')).toBeVisible();
-  await expect(page.locator('text=Triple Nested')).toBeVisible();
+  await expect(page.locator('text=Triple Nested').first()).toBeVisible();
   await expect(page.locator('text=Inside Footer')).toBeVisible();
 
   // Verify that inset values are being displayed with numeric format
