@@ -16,13 +16,11 @@
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "react-native": "0.79.5",
-    "react-native-safe-area-context": "4.6.3",
+    "react-native-safe-area-context": "5.4.0",
     "react-native-web": "~0.20.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.0",
-    "react-native-builder-bob": "^0.40.13",
-    "react-native-monorepo-config": "^0.1.9"
+    "@babel/core": "^7.20.0"
   },
   "private": true
 }
