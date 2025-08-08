@@ -2,7 +2,7 @@
   "compilerOptions": {
     "rootDir": ".",
     "paths": {
-      "react-native-nested-safe-area": ["./src/index"]
+      "@fullstackhouse/react-native-nested-safe-area": ["./src/index"]
     },
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
