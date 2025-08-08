@@ -1,0 +1,10 @@
+Starting project at /Users/jacek/src/tournee/react-native-nested-safe-area/example
+Starting Metro Bundler
+The following packages should be updated for best compatibility with the installed expo version:
+  react-native-safe-area-context@4.6.3 - expected version: 5.4.0
+Your project may not work correctly until you install the expected versions of the packages.
+Waiting on http://localhost:8081
+Logs for your project will appear below.
+Web Bundled 142ms example/index.js (176 modules)
+Web example/index.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+Web Bundled 9ms example/index.js (1 module)

@@ -1,9 +1,6 @@
 import { Text, StyleSheet } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import {
-  NestedSafeAreaProvider,
-  NestedSafeAreaView,
-} from 'react-native-nested-safe-area';
+import { NestedSafeAreaProvider, NestedSafeAreaView } from '../../src';
 
 export default function App() {
   return (
