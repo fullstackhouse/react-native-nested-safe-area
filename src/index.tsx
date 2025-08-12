@@ -1,5 +1,8 @@
 export { NestedSafeAreaProvider } from './NestedSafeAreaProvider';
-export type { NestedSafeAreaProviderProps } from './NestedSafeAreaProvider';
+export type {
+  NestedSafeAreaProviderProps,
+  Edge,
+} from './NestedSafeAreaProvider';
 export { useNestedSafeAreaContext } from './NestedSafeAreaContext';
 export type {
   NestedSafeAreaContextValue,

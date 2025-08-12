@@ -119,6 +119,85 @@ describe('NestedSafeArea', () => {
       expect(screen.getByTestId('insets-top')).toHaveTextContent('0');
       expect(screen.getByTestId('insets-bottom')).toHaveTextContent('0');
     });
+
+    it('should consume edges completely when using consumedEdges', () => {
+      render(
+        <SafeAreaProvider>
+          <NestedSafeAreaProvider consumedEdges={['top', 'bottom']}>
+            <TestComponent />
+          </NestedSafeAreaProvider>
+        </SafeAreaProvider>
+      );
+
+      // Top and bottom edges should be completely consumed (set to 0)
+      expect(screen.getByTestId('insets-top')).toHaveTextContent('0');
+      expect(screen.getByTestId('insets-right')).toHaveTextContent('0');
+      expect(screen.getByTestId('insets-bottom')).toHaveTextContent('0');
+      expect(screen.getByTestId('insets-left')).toHaveTextContent('0');
+    });
+
+    it('should consume only specified edges when using consumedEdges', () => {
+      render(
+        <SafeAreaProvider>
+          <NestedSafeAreaProvider consumedEdges={['top']}>
+            <TestComponent />
+          </NestedSafeAreaProvider>
+        </SafeAreaProvider>
+      );
+
+      // Only top should be consumed, others should remain
+      expect(screen.getByTestId('insets-top')).toHaveTextContent('0');
+      expect(screen.getByTestId('insets-right')).toHaveTextContent('0');
+      expect(screen.getByTestId('insets-bottom')).toHaveTextContent('34');
+      expect(screen.getByTestId('insets-left')).toHaveTextContent('0');
+    });
+
+    it('should prioritize consumedEdges over consumedInsets when both are provided', () => {
+      render(
+        <SafeAreaProvider>
+          <NestedSafeAreaProvider
+            consumedInsets={{ top: 10, bottom: 10 }}
+            consumedEdges={['top']}
+          >
+            <TestComponent />
+          </NestedSafeAreaProvider>
+        </SafeAreaProvider>
+      );
+
+      // consumedEdges should take precedence - only top consumed completely
+      expect(screen.getByTestId('insets-top')).toHaveTextContent('0');
+      expect(screen.getByTestId('insets-bottom')).toHaveTextContent('34'); // Not affected by consumedInsets
+    });
+
+    it('should handle nested providers with consumedEdges', () => {
+      render(
+        <SafeAreaProvider>
+          <NestedSafeAreaProvider consumedEdges={['top']}>
+            <NestedSafeAreaProvider consumedEdges={['bottom']}>
+              <TestComponent />
+            </NestedSafeAreaProvider>
+          </NestedSafeAreaProvider>
+        </SafeAreaProvider>
+      );
+
+      // First provider consumes top (44 -> 0), second consumes bottom (34 -> 0)
+      expect(screen.getByTestId('insets-top')).toHaveTextContent('0');
+      expect(screen.getByTestId('insets-bottom')).toHaveTextContent('0');
+    });
+
+    it('should handle empty consumedEdges array', () => {
+      render(
+        <SafeAreaProvider>
+          <NestedSafeAreaProvider consumedEdges={[]}>
+            <TestComponent />
+          </NestedSafeAreaProvider>
+        </SafeAreaProvider>
+      );
+
+      // Empty array should not consume anything
+      expect(screen.getByTestId('insets-top')).toHaveTextContent('44');
+      expect(screen.getByTestId('insets-bottom')).toHaveTextContent('34');
+    });
   });
 
   describe('NestedSafeAreaView', () => {

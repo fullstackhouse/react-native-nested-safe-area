@@ -92,6 +92,41 @@ export default function App() {
 }
 ```
 
+### Using consumedEdges for Complete Edge Consumption
+
+The `consumedEdges` prop provides a convenient way to completely consume specific edges, setting them to zero in nested contexts:
+
+```jsx
+import React from 'react';
+import { View, Text } from 'react-native';
+import { NestedSafeAreaProvider } from 'react-native-nested-safe-area';
+
+export default function App() {
+  return (
+    <NestedSafeAreaProvider>
+      {/* Header consumes top edge completely */}
+      <View style={{ backgroundColor: 'blue', padding: 20 }}>
+        <Text>Header</Text>
+      </View>
+      
+      {/* Main content - top edge is now zero for nested components */}
+      <NestedSafeAreaProvider consumedEdges={['top']}>
+        <View style={{ flex: 1 }}>
+          <Text>Main content (top safe area consumed)</Text>
+          
+          {/* Footer consumes bottom edge */}
+          <NestedSafeAreaProvider consumedEdges={['bottom']}>
+            <View style={{ backgroundColor: 'green', marginTop: 'auto' }}>
+              <Text>Footer (bottom safe area consumed)</Text>
+            </View>
+          </NestedSafeAreaProvider>
+        </View>
+      </NestedSafeAreaProvider>
+    </NestedSafeAreaProvider>
+  );
+}
+```
+
 ### Edge-Specific Safe Areas
 
 ```jsx
@@ -144,7 +179,10 @@ Props:
 Provides nested safe area context with automatic inset consumption tracking.
 
 ```typescript
-<NestedSafeAreaProvider consumedInsets?: Partial<EdgeInsets>>
+<NestedSafeAreaProvider 
+  consumedInsets?: Partial<EdgeInsets>
+  consumedEdges?: Edge[]
+>
   {children}
 </NestedSafeAreaProvider>
 ```
@@ -152,7 +190,14 @@ Provides nested safe area context with automatic inset consumption tracking.
 Props:
 
 - `consumedInsets?: Partial<EdgeInsets>` - Insets to subtract from parent context
+- `consumedEdges?: Edge[]` - List of edges to completely consume (set to zero). Takes precedence over `consumedInsets` when provided
 - `children: ReactNode` - Child components
+
+#### Edge Type
+
+```typescript
+type Edge = 'top' | 'right' | 'bottom' | 'left';
+```
 
 ### useNestedSafeAreaInsets()
 
