@@ -30,48 +30,47 @@ export interface NestedSafeAreaProviderProps {
 
 export const NestedSafeAreaProvider: React.FC<NestedSafeAreaProviderProps> = ({
   children,
-  consumedInsets = { top: 0, right: 0, bottom: 0, left: 0 },
+  consumedInsets,
   consumedEdges,
 }) => {
   const originalInsets = useSafeAreaInsets();
   const parentContext = useContext(NestedSafeAreaContext);
+  const parentInsets = parentContext ? parentContext.insets : originalInsets;
 
-  const baseInsets = parentContext ? parentContext.insets : originalInsets;
+  const finalConsumedInsets = useMemo(() => {
+    const insets = {
+      top: consumedInsets?.top || 0,
+      right: consumedInsets?.right || 0,
+      bottom: consumedInsets?.bottom || 0,
+      left: consumedInsets?.left || 0,
+    };
 
-  // Convert consumedEdges to consumedInsets
-  const edgeBasedConsumedInsets = useMemo(() => {
-    if (!consumedEdges || consumedEdges.length === 0) {
-      return { top: 0, right: 0, bottom: 0, left: 0 };
+    if (consumedEdges && consumedEdges.length > 0) {
+      consumedEdges.forEach((edge) => {
+        insets[edge] = parentInsets[edge];
+      });
     }
 
-    const insets = { top: 0, right: 0, bottom: 0, left: 0 };
-    consumedEdges.forEach((edge) => {
-      insets[edge] = baseInsets[edge];
-    });
-
     return insets;
-  }, [consumedEdges, baseInsets]);
 
-  // Use consumedEdges if provided, otherwise fall back to consumedInsets
-  const finalConsumedInsets = consumedEdges
-    ? edgeBasedConsumedInsets
-    : consumedInsets;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [consumedEdges?.join(), JSON.stringify(consumedInsets), parentInsets]);
 
   const currentInsets: NestedSafeAreaInsets = useMemo(
     () => ({
-      top: Math.max(0, baseInsets.top - (finalConsumedInsets.top || 0)),
-      right: Math.max(0, baseInsets.right - (finalConsumedInsets.right || 0)),
+      top: Math.max(0, parentInsets.top - (finalConsumedInsets.top || 0)),
+      right: Math.max(0, parentInsets.right - (finalConsumedInsets.right || 0)),
       bottom: Math.max(
         0,
-        baseInsets.bottom - (finalConsumedInsets.bottom || 0)
+        parentInsets.bottom - (finalConsumedInsets.bottom || 0)
       ),
-      left: Math.max(0, baseInsets.left - (finalConsumedInsets.left || 0)),
+      left: Math.max(0, parentInsets.left - (finalConsumedInsets.left || 0)),
     }),
-    [baseInsets, finalConsumedInsets]
+    [parentInsets, finalConsumedInsets]
   );
 
   const consumeInsets = useCallback(
-    (consumed: Partial<typeof consumedInsets>) => {
+    (consumed: Partial<EdgeInsets>) => {
       return {
         top: Math.max(0, currentInsets.top - (consumed.top || 0)),
         right: Math.max(0, currentInsets.right - (consumed.right || 0)),

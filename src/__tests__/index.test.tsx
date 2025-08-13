@@ -152,7 +152,7 @@ describe('NestedSafeArea', () => {
       expect(screen.getByTestId('insets-left')).toHaveTextContent('0');
     });
 
-    it('should prioritize consumedEdges over consumedInsets when both are provided', () => {
+    it('should combine consumedEdges and consumedInsets when both are provided', () => {
       render(
         <SafeAreaProvider>
           <NestedSafeAreaProvider
@@ -164,9 +164,9 @@ describe('NestedSafeArea', () => {
         </SafeAreaProvider>
       );
 
-      // consumedEdges should take precedence - only top consumed completely
+      // consumedEdges completely consumes top, consumedInsets partially consumes bottom
       expect(screen.getByTestId('insets-top')).toHaveTextContent('0');
-      expect(screen.getByTestId('insets-bottom')).toHaveTextContent('34'); // Not affected by consumedInsets
+      expect(screen.getByTestId('insets-bottom')).toHaveTextContent('24'); // 34 - 10 from consumedInsets
     });
 
     it('should handle nested providers with consumedEdges', () => {
