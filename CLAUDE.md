@@ -1,0 +1,2 @@
+- Remember about updating tests and README.md documentation after making changes
+- Always run `npm run lint` and `npm test` after making changes

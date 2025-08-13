@@ -26,12 +26,19 @@ export interface NestedSafeAreaProviderProps {
    * @example ['top', 'bottom'] // Completely consumes top and bottom edges
    */
   consumedEdges?: Edge[];
+  /**
+   * List of edges to reset to the original safe area insets.
+   * Takes precedence over both consumedInsets and consumedEdges.
+   * @example ['top', 'bottom'] // Resets top and bottom to original safe area values
+   */
+  resetEdges?: Edge[];
 }
 
 export const NestedSafeAreaProvider: React.FC<NestedSafeAreaProviderProps> = ({
   children,
   consumedInsets,
   consumedEdges,
+  resetEdges,
 }) => {
   const originalInsets = useSafeAreaInsets();
   const parentContext = useContext(NestedSafeAreaContext);
@@ -56,8 +63,8 @@ export const NestedSafeAreaProvider: React.FC<NestedSafeAreaProviderProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [consumedEdges?.join(), JSON.stringify(consumedInsets), parentInsets]);
 
-  const currentInsets: NestedSafeAreaInsets = useMemo(
-    () => ({
+  const currentInsets: NestedSafeAreaInsets = useMemo(() => {
+    const insets = {
       top: Math.max(0, parentInsets.top - (finalConsumedInsets.top || 0)),
       right: Math.max(0, parentInsets.right - (finalConsumedInsets.right || 0)),
       bottom: Math.max(
@@ -65,9 +72,18 @@ export const NestedSafeAreaProvider: React.FC<NestedSafeAreaProviderProps> = ({
         parentInsets.bottom - (finalConsumedInsets.bottom || 0)
       ),
       left: Math.max(0, parentInsets.left - (finalConsumedInsets.left || 0)),
-    }),
-    [parentInsets, finalConsumedInsets]
-  );
+    };
+
+    // Apply resetEdges - reset specified edges to original safe area values
+    if (resetEdges && resetEdges.length > 0) {
+      resetEdges.forEach((edge) => {
+        insets[edge] = originalInsets[edge];
+      });
+    }
+
+    return insets;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [parentInsets, finalConsumedInsets, resetEdges?.join(), originalInsets]);
 
   const consumeInsets = useCallback(
     (consumed: Partial<EdgeInsets>) => {

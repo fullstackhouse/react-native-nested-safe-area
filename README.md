@@ -127,6 +127,36 @@ export default function App() {
 }
 ```
 
+### Using resetEdges to Restore Safe Areas
+
+The `resetEdges` prop allows you to reset specific edges back to the original safe area values, useful when you need to restore safe areas in deeply nested contexts:
+
+```jsx
+import React from 'react';
+import { View, Text } from 'react-native';
+import { NestedSafeAreaProvider } from 'react-native-nested-safe-area';
+
+export default function App() {
+  return (
+    <NestedSafeAreaProvider>
+      {/* First level consumes top and bottom edges */}
+      <NestedSafeAreaProvider consumedEdges={['top', 'bottom']}>
+        <View style={{ flex: 1 }}>
+          <Text>No top or bottom safe areas here</Text>
+          
+          {/* Modal/overlay that needs original top safe area restored */}
+          <NestedSafeAreaProvider resetEdges={['top']}>
+            <View style={{ position: 'absolute', top: 0, left: 0, right: 0 }}>
+              <Text>Modal with restored top safe area</Text>
+            </View>
+          </NestedSafeAreaProvider>
+        </View>
+      </NestedSafeAreaProvider>
+    </NestedSafeAreaProvider>
+  );
+}
+```
+
 ### Edge-Specific Safe Areas
 
 ```jsx
@@ -182,6 +212,7 @@ Provides nested safe area context with automatic inset consumption tracking.
 <NestedSafeAreaProvider 
   consumedInsets?: Partial<EdgeInsets>
   consumedEdges?: Edge[]
+  resetEdges?: Edge[]
 >
   {children}
 </NestedSafeAreaProvider>
@@ -191,6 +222,7 @@ Props:
 
 - `consumedInsets?: Partial<EdgeInsets>` - Insets to subtract from parent context
 - `consumedEdges?: Edge[]` - List of edges to completely consume (set to zero). Takes precedence over `consumedInsets` when provided
+- `resetEdges?: Edge[]` - List of edges to reset to the original safe area values. Takes precedence over both `consumedInsets` and `consumedEdges`
 - `children: ReactNode` - Child components
 
 #### Edge Type

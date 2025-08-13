@@ -198,6 +198,92 @@ describe('NestedSafeArea', () => {
       expect(screen.getByTestId('insets-top')).toHaveTextContent('44');
       expect(screen.getByTestId('insets-bottom')).toHaveTextContent('34');
     });
+
+    it('should reset specified edges to original safe area values with resetEdges', () => {
+      render(
+        <SafeAreaProvider>
+          <NestedSafeAreaProvider consumedInsets={{ top: 20, bottom: 10 }}>
+            <NestedSafeAreaProvider resetEdges={['top']}>
+              <TestComponent />
+            </NestedSafeAreaProvider>
+          </NestedSafeAreaProvider>
+        </SafeAreaProvider>
+      );
+
+      // Top should be reset to original value (44), bottom should remain consumed (34 - 10 = 24)
+      expect(screen.getByTestId('insets-top')).toHaveTextContent('44');
+      expect(screen.getByTestId('insets-bottom')).toHaveTextContent('24');
+    });
+
+    it('should reset all specified edges with resetEdges', () => {
+      render(
+        <SafeAreaProvider>
+          <NestedSafeAreaProvider consumedEdges={['top', 'bottom']}>
+            <NestedSafeAreaProvider resetEdges={['top', 'bottom']}>
+              <TestComponent />
+            </NestedSafeAreaProvider>
+          </NestedSafeAreaProvider>
+        </SafeAreaProvider>
+      );
+
+      // Both top and bottom should be reset to original values
+      expect(screen.getByTestId('insets-top')).toHaveTextContent('44');
+      expect(screen.getByTestId('insets-bottom')).toHaveTextContent('34');
+    });
+
+    it('should prioritize resetEdges over consumedEdges and consumedInsets', () => {
+      render(
+        <SafeAreaProvider>
+          <NestedSafeAreaProvider
+            consumedInsets={{ top: 10, bottom: 10 }}
+            consumedEdges={['bottom']}
+            resetEdges={['top', 'bottom']}
+          >
+            <TestComponent />
+          </NestedSafeAreaProvider>
+        </SafeAreaProvider>
+      );
+
+      // Both edges should be reset despite consumedInsets and consumedEdges
+      expect(screen.getByTestId('insets-top')).toHaveTextContent('44');
+      expect(screen.getByTestId('insets-bottom')).toHaveTextContent('34');
+    });
+
+    it('should handle nested providers with resetEdges', () => {
+      render(
+        <SafeAreaProvider>
+          <NestedSafeAreaProvider consumedEdges={['top', 'bottom']}>
+            <NestedSafeAreaProvider resetEdges={['top']}>
+              <NestedSafeAreaProvider consumedInsets={{ top: 10 }}>
+                <TestComponent />
+              </NestedSafeAreaProvider>
+            </NestedSafeAreaProvider>
+          </NestedSafeAreaProvider>
+        </SafeAreaProvider>
+      );
+
+      // First provider consumes top and bottom (both -> 0)
+      // Second provider resets top to original (44)
+      // Third provider consumes 10 from top (44 - 10 = 34)
+      expect(screen.getByTestId('insets-top')).toHaveTextContent('34');
+      expect(screen.getByTestId('insets-bottom')).toHaveTextContent('0');
+    });
+
+    it('should handle empty resetEdges array', () => {
+      render(
+        <SafeAreaProvider>
+          <NestedSafeAreaProvider consumedInsets={{ top: 20 }}>
+            <NestedSafeAreaProvider resetEdges={[]}>
+              <TestComponent />
+            </NestedSafeAreaProvider>
+          </NestedSafeAreaProvider>
+        </SafeAreaProvider>
+      );
+
+      // Empty resetEdges array should not reset anything
+      expect(screen.getByTestId('insets-top')).toHaveTextContent('24'); // 44 - 20
+      expect(screen.getByTestId('insets-bottom')).toHaveTextContent('34');
+    });
   });
 
   describe('NestedSafeAreaView', () => {
