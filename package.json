@@ -1,6 +1,6 @@
 {
   "name": "@fullstackhouse/react-native-nested-safe-area",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A wrapper on top of react-native-safe-area-context that allows nested safe area contexts",
   "main": "./lib/module/index.js",
   "types": "./lib/typescript/src/index.d.ts",
